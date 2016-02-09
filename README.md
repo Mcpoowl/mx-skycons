@@ -1,7 +1,7 @@
 # Skycons for Mendix
 
 Skycons for Mendix implements 10 animated weather icons from the Skycons library for use in your Mendix Application
-
+The original Skycons repository can be found [here](https://github.com/darkskyapp/skycons)
 
 ## Contributing
 
