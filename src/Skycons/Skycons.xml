@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="Skycons.widget.Skycons" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>Skycons</name>
+    <description>The description of this widget.</description>
+    <icon>
+        iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAFRklEQVR4XuWbj5ENQRDG+yJABIgAESACRMBFgAgQASLgIkAEXASIABEgAup3tq+2prpnunfm7a66qXp1V3ezM93fdH/9Z/YdyXrjsojcE5FHIvJdRF6LyJf1trd3OlpRgCci8nK2HyBcX3F/c6s1AfgkIrcLKe6KCH/fbGwNwLGIvN1MexFZE4D3EwfM9X0hIs8vCgAo+qxQFiKEGzYba1qABcCpiNwZoD0gwi8AmuKUNQFA0Y+FsiMAgEMeztZN8crWACB3jwyWVf0SkStRq+rZPLqHziMR+lk89FtE+PuScV9E3hkPptZcEwBkLc31ZMoMswDcnNzJAu+piLyKLtgCgLRVszfMDZLpGQjMyfEBDEJjdrAGXAII5UgDWgPAIi2EBmH8bKth5RPI8nWKKCnZagB4G1HAPJgKmrVB4NQ/O37P/6gvUqMGgMWwujgoA0Iq5qYksyd7ACyuKVocUJJWKVYq5g4AwCLSLhlaALBhzRL4P5YQITPIi2wNArw2+7AGpqsf1iJBqvky5NxDpOdnEQGAybrZpQXMi7LUAAidGVgfxVLarzObRAFgTfwPoW4UG3gmyImjeG+xo+E3xe5REDIAsCZKAQKtLYYXd2uxOirbfB6RB6IbDkIWABVKkxCrp1fL0pYoP488gDC0j7gUAE8RTv5bI7//MIXPUhGAI/lS67L2wALoIw6zhJEAtMwed8GfW6QGaTJvXuIezB1GAkAB8tg4NqozIkAkVM4f5xnWtCLPsFbaKAA4NUy/HCiPWS/1W9yCbNMCAVdoWVOTc0YB4GWM0SSpJiiW8GZB/tFUngkjALAaHbUQGRKsmOQBTOfHI0Tk0pxF+45YlPYQcMmTEQB4nZkhJjoB4bmYZWEoSA8jknkejwDAOh1CHcCMHFZ5biVi5RVcTYbTEQBYV15dFZojsaWY1VX2+hjWskNcAPbHROdjcX1eOS6rQ0V0uVU845FmufQPrHSEBfwxhF4LAI/IcUtckPCJlTAAC8IkdPL7WWieAwDCV6fThEiUMfnJg5gWpl2OPQIQ5h4AQEH666UZW4tYrAuiALeFC9AItbrDKQBaba/5Yha7WySY6s0HpY2SYHC5f9OwAEsBbxGL3fcWBtMARFmTmMsplJnX3hKhNAAQnjYZeRgFtXjRtrcyqLX4XlPhEBAjwiAbeTwyIiHafTEEAF6ujjX1tLFq7bUhtcYoCwAE7/4AELCEJQ0RihrrBnh3DREAQFA4o2ybqy9G+/yte4RFl6AeIYy0AAWBxMjq4KgMWAJAeU3RWhVJhwmAdtkUVQVrbawQMzuTau21Wpu+uudoC9DNWu6QBaJm9vMIpPVK2EIOBYC6A4lT+W5gVnkIj+6wpZQVInEtSDfUiD0kAKpoq8/vARK5R/DS+HDkGQEApMUlxlmTsXK8uAUlt16Pz5uWmLjW6kqSETP20nAVg9CMBbmjF4DSBPFHq2eQNfvM/FYtU5WpBwCrRYXgtKhC/pfRsjEXWbAcL/y6idNSAPBrXlaysrQtANB0HBCsRMx9fW4JALVL0EO0wzOGgmxEjPJi1e1RLgHAq/x6UlT8mGtxWJ3TihBgDRjCr34Pgd/dL2VkAfAuHXouQUe9PpuxlPO5WQA4GYtoei5BrTVrd36LFB1VDFnC9pama7XVTQyyFlDG3PTLyYYUhMySuQ9xsTIEABYh5sIFEFb4tfSK3VrpbK9Vhd0kawHhhRMTrahyoQCwWmmr5RN7sAArlx/xZaqQEe4BgEN9m+y/AQBBywvWQ9wtDosCIWSTk+jpEVkosvS7RL3pcEiEvyEhNFB17hzsAAAAAElFTkSuQmCC
+    </icon>
+
+    <properties>
+        <property key="icon" type="string">
+            <caption>Icon</caption>
+            <category>Appearance</category>
+            <description>The icon to show. Possible values....</description>
+        </property>
+        <property key="width" type="integer" required="true" defaultValue="128">
+            <caption>Width</caption>
+            <category>Appearance</category>
+            <description>Width of the canvas. Default is 128.</description>
+        </property>
+        <property key="height" type="integer" required="true" defaultValue="128">
+            <caption>Height</caption>
+            <category>Appearance</category>
+            <description>Height of the canvas. Default is 128.</description>
+        </property>
+        <property key="coloring" type="enumeration" required="true" defaultValue="colored">
+            <caption>Colors</caption>
+            <category>Appearance</category>
+            <description>What colors to use for the icon: One color or 'real life' coloring</description>
+            <enumerationValues>
+                <enumerationValue key="one">One color</enumerationValue>
+                <enumerationValue key="colored">Colored</enumerationValue>
+            </enumerationValues>
+        </property>
+    </properties>
+</widget>
