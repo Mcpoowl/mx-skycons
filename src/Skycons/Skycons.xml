@@ -7,10 +7,22 @@
     </icon>
 
     <properties>
-        <property key="icon" type="string">
+        <property key="icon" type="enumeration" required="true" defaultValue="clear_day">
             <caption>Icon</caption>
             <category>Appearance</category>
-            <description>The icon to show. Possible values....</description>
+            <description>The icon to show.</description>
+            <enumerationValues>
+                <enumerationValue key="clear_day">Sunny / Clear (Day)</enumerationValue>
+                <enumerationValue key="clear_night">Clear (Night)</enumerationValue>
+                <enumerationValue key="partly_cloudy_day">Partly Cloudy (Day)</enumerationValue>
+                <enumerationValue key="partly_cloudy_night">Partly Cloudy (Night)</enumerationValue>
+                <enumerationValue key="cloudy">Cloudy</enumerationValue>
+                <enumerationValue key="rain">Rain</enumerationValue>
+                <enumerationValue key="sleet">Sleet</enumerationValue>
+                <enumerationValue key="snow">Snow</enumerationValue>
+                <enumerationValue key="wind">Wind</enumerationValue>
+                <enumerationValue key="fog">Fog</enumerationValue>
+            </enumerationValues>
         </property>
         <property key="width" type="integer" required="true" defaultValue="128">
             <caption>Width</caption>
@@ -30,6 +42,16 @@
                 <enumerationValue key="one">One color</enumerationValue>
                 <enumerationValue key="colored">Colored</enumerationValue>
             </enumerationValues>
+        </property>
+        <property key="color" type="string" required="false" defaultValue="#000">
+            <caption>Color</caption>
+            <category>Appearance</category>
+            <description>When single color is selected, which color should the icons be?</description>
+        </property>
+        <property key="animated" type="boolean" required="true" defaultValue="true">
+            <caption>Animate</caption>
+            <category>Appearance</category>
+            <description>Animate the icon?</description>
         </property>
     </properties>
 </widget>

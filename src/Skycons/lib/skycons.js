@@ -194,7 +194,7 @@
   }
 
   function sun(ctx, t, cx, cy, cw, s, color) {
-    t /= 120000;
+    t /= 50000;
 
     var a = cw * 0.25 - s * 0.5,
         b = cw * 0.32 + s * 0.5,
@@ -752,7 +752,7 @@ var icons = new Skycons({
   "monochrome": false,
   "colors": {
     "cloud" : "#D3D3D3",
-    "sun"   : "#FFE246" 
+    "sun"   : "#FFE246"
   }
 }),
           list  = [

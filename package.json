@@ -20,10 +20,7 @@
     "semver": "^5.1.0",
     "node-mendix-modeler-path": "https://github.com/JelteMX/node-mendix-modeler-path/archive/v1.0.0.tar.gz"
   },
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/McPoowl/Skycons"
-  },
+  "repository": {"type":"git","url":"http://github.com/McPoowl/Skycons"},
   "engines": {
     "node": ">=0.12.0"
   },

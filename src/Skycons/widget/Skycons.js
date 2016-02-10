@@ -19,7 +19,6 @@
 define([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
-    "dijit/_TemplatedMixin",
 
     "mxui/dom",
     "dojo/dom",
@@ -35,16 +34,16 @@ define([
     "dojo/_base/event",
 
     "Skycons/lib/jquery-1.11.2",
+    "Skycons/lib/skycons",
     "dojo/text!Skycons/widget/template/Skycons.html"
-], function(declare, _WidgetBase, _TemplatedMixin, dom, dojoDom, dojoProp, dojoGeometry, dojoClass, dojoStyle, dojoConstruct, dojoArray, dojoLang, dojoText, dojoHtml, dojoEvent, _jQuery, widgetTemplate) {
+], function(declare, _WidgetBase, dom, dojoDom, dojoProp, dojoGeometry, dojoClass, dojoStyle, dojoConstruct, dojoArray, dojoLang, dojoText, dojoHtml, domConstruct, dojoEvent, widgetTemplate) {
     "use strict";
 
-    var $ = _jQuery.noConflict(true);
 
     // Declare widget's prototype.
-    return declare("Skycons.widget.Skycons", [ _WidgetBase, _TemplatedMixin ], {
+    return declare("Skycons.widget.Skycons", [ _WidgetBase ], {
         // _TemplatedMixin will create our dom node using this HTML template.
-        templateString: widgetTemplate,
+    //    templateString: widgetTemplate,
 
         // DOM elements
         inputNodes: null,
@@ -56,6 +55,11 @@ define([
         mfToExecute: "",
         messageString: "",
         backgroundColor: "",
+        icon: "",
+        width: "",
+        height: "",
+        animated: "",
+        color: "",
 
         // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
         _handles: null,
@@ -73,8 +77,48 @@ define([
         // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
         postCreate: function() {
             logger.debug(this.id + ".postCreate");
-            this._updateRendering();
-            this._setupEvents();
+
+            var domNode = dojoConstruct.create("canvas", {
+                class: this.icon,
+                width: this.width,
+                height: this.height
+            })
+
+            dojoConstruct.place(domNode, this.domNode, "only");
+            this._createSkycon();
+        },
+
+
+        _createSkycon: function() {
+            logger.debug(this.id + "._createSkycon start")
+            //Create a list with all the possible values
+        var    list  = [
+            "clear_day", "clear_night", "partly_cloudy_day",
+            "partly_cloudy_night", "cloudy", "rain", "sleet", "snow", "wind",
+            "fog"
+        ],
+        i;
+            if(this.coloring == "one"){
+                var colorString = this.color;
+                var skycons = new Skycons({"color": colorString});
+            } else {
+            logger.debug(this.id + "._createSkycon colored")
+                // Colored instance of Skycon
+                var skycons = new Skycons({"monochrome": false});
+            }
+            for(i = list.length; i--; ) {
+                var weatherType = list[i],
+                    elements = document.getElementsByClassName( weatherType );
+                for (e = elements.length; e--;){
+                    skycons.set( elements[e], weatherType );
+                }
+            }
+
+            if(this.animated == true){
+                skycons.play();
+            }
+
+
         },
 
         // mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
@@ -82,34 +126,12 @@ define([
             logger.debug(this.id + ".update");
 
             this._contextObj = obj;
-            this._resetSubscriptions();
-            this._updateRendering();
+        //    this._resetSubscriptions();
 
             callback();
         },
 
-        // mxui.widget._WidgetBase.enable is called when the widget should enable editing. Implement to enable editing if widget is input widget.
-        enable: function() {
-          logger.debug(this.id + ".enable");
-        },
-
-        // mxui.widget._WidgetBase.enable is called when the widget should disable editing. Implement to disable editing if widget is input widget.
-        disable: function() {
-          logger.debug(this.id + ".disable");
-        },
-
-        // mxui.widget._WidgetBase.resize is called when the page's layout is recalculated. Implement to do sizing calculations. Prefer using CSS instead.
-        resize: function(box) {
-          logger.debug(this.id + ".resize");
-        },
-
-        // mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.
-        uninitialize: function() {
-          logger.debug(this.id + ".uninitialize");
-            // Clean up listeners, helper objects, etc. There is no need to remove listeners added with this.connect / this.subscribe / this.own.
-        },
-
-        // We want to stop events on a mobile device
+    // We want to stop events on a mobile device
         _stopBubblingEventOnMobile: function(e) {
             logger.debug(this.id + "._stopBubblingEventOnMobile");
             if (typeof document.ontouchstart !== "undefined") {
@@ -117,144 +139,7 @@ define([
             }
         },
 
-        // Attach events to HTML dom elements
-        _setupEvents: function() {
-            logger.debug(this.id + "._setupEvents");
-            this.connect(this.colorSelectNode, "change", function(e) {
-                // Function from mendix object to set an attribute.
-                this._contextObj.set(this.backgroundColor, this.colorSelectNode.value);
-            });
 
-            this.connect(this.infoTextNode, "click", function(e) {
-                // Only on mobile stop event bubbling!
-                this._stopBubblingEventOnMobile(e);
-
-                // If a microflow has been set execute the microflow on a click.
-                if (this.mfToExecute !== "") {
-                    mx.data.action({
-                        params: {
-                            applyto: "selection",
-                            actionname: this.mfToExecute,
-                            guids: [ this._contextObj.getGuid() ]
-                        },
-                        store: {
-                            caller: this.mxform
-                        },
-                        callback: function(obj) {
-                            //TODO what to do when all is ok!
-                        },
-                        error: dojoLang.hitch(this, function(error) {
-                            logger.error(this.id + ": An error occurred while executing microflow: " + error.description);
-                        })
-                    }, this);
-                }
-            });
-        },
-
-        // Rerender the interface.
-        _updateRendering: function() {
-            logger.debug(this.id + "._updateRendering");
-            this.colorSelectNode.disabled = this.readOnly;
-            this.colorInputNode.disabled = this.readOnly;
-
-            if (this._contextObj !== null) {
-                dojoStyle.set(this.domNode, "display", "block");
-
-                var colorValue = this._contextObj.get(this.backgroundColor);
-
-                this.colorInputNode.value = colorValue;
-                this.colorSelectNode.value = colorValue;
-
-                dojoHtml.set(this.infoTextNode, this.messageString);
-                dojoStyle.set(this.infoTextNode, "background-color", colorValue);
-            } else {
-                dojoStyle.set(this.domNode, "display", "none");
-            }
-
-            // Important to clear all validations!
-            this._clearValidations();
-        },
-
-        // Handle validations.
-        _handleValidation: function(validations) {
-            logger.debug(this.id + "._handleValidation");
-            this._clearValidations();
-
-            var validation = validations[0],
-                message = validation.getReasonByAttribute(this.backgroundColor);
-
-            if (this.readOnly) {
-                validation.removeAttribute(this.backgroundColor);
-            } else if (message) {
-                this._addValidation(message);
-                validation.removeAttribute(this.backgroundColor);
-            }
-        },
-
-        // Clear validations.
-        _clearValidations: function() {
-            logger.debug(this.id + "._clearValidations");
-            dojoConstruct.destroy(this._alertDiv);
-            this._alertDiv = null;
-        },
-
-        // Show an error message.
-        _showError: function(message) {
-            logger.debug(this.id + "._showError");
-            if (this._alertDiv !== null) {
-                dojoHtml.set(this._alertDiv, message);
-                return true;
-            }
-            this._alertDiv = dojoConstruct.create("div", {
-                "class": "alert alert-danger",
-                "innerHTML": message
-            });
-            dojoConstruct.place(this.domNode, this._alertDiv);
-        },
-
-        // Add a validation.
-        _addValidation: function(message) {
-            logger.debug(this.id + "._addValidation");
-            this._showError(message);
-        },
-
-        // Reset subscriptions.
-        _resetSubscriptions: function() {
-            logger.debug(this.id + "._resetSubscriptions");
-            // Release handles on previous object, if any.
-            if (this._handles) {
-                dojoArray.forEach(this._handles, function (handle) {
-                    mx.data.unsubscribe(handle);
-                });
-                this._handles = [];
-            }
-
-            // When a mendix object exists create subscribtions.
-            if (this._contextObj) {
-                var objectHandle = this.subscribe({
-                    guid: this._contextObj.getGuid(),
-                    callback: dojoLang.hitch(this, function(guid) {
-                        this._updateRendering();
-                    })
-                });
-
-                var attrHandle = this.subscribe({
-                    guid: this._contextObj.getGuid(),
-                    attr: this.backgroundColor,
-                    callback: dojoLang.hitch(this, function(guid, attr, attrValue) {
-                        this._updateRendering();
-                    })
-                });
-
-                var validationHandle = this.subscribe({
-                    guid: this._contextObj.getGuid(),
-                    val: true,
-                    callback: dojoLang.hitch(this, this._handleValidation)
-                });
-
-                this._handles = [ objectHandle, attrHandle, validationHandle ];
-            }
-        }
     });
 });
 
