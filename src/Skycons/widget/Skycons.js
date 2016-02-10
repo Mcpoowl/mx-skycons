@@ -22,34 +22,20 @@ define([
 
     "mxui/dom",
     "dojo/dom",
-    "dojo/dom-prop",
-    "dojo/dom-geometry",
     "dojo/dom-class",
     "dojo/dom-style",
     "dojo/dom-construct",
-    "dojo/_base/array",
-    "dojo/_base/lang",
     "dojo/text",
     "dojo/html",
-    "dojo/_base/event",
 
     "Skycons/lib/jquery-1.11.2",
-    "Skycons/lib/skycons",
-    "dojo/text!Skycons/widget/template/Skycons.html"
-], function(declare, _WidgetBase, dom, dojoDom, dojoProp, dojoGeometry, dojoClass, dojoStyle, dojoConstruct, dojoArray, dojoLang, dojoText, dojoHtml, domConstruct, dojoEvent, widgetTemplate) {
+    "Skycons/lib/skycons"
+], function(declare, _WidgetBase, dom, dojoDom,   dojoClass, dojoStyle, dojoConstruct,  dojoText, dojoHtml ) {
     "use strict";
 
 
     // Declare widget's prototype.
     return declare("Skycons.widget.Skycons", [ _WidgetBase ], {
-        // _TemplatedMixin will create our dom node using this HTML template.
-    //    templateString: widgetTemplate,
-
-        // DOM elements
-        inputNodes: null,
-        colorSelectNode: null,
-        colorInputNode: null,
-        infoTextNode: null,
 
         // Parameters configured in the Modeler.
         mfToExecute: "",
@@ -61,18 +47,6 @@ define([
         animated: "",
         color: "",
 
-        // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
-        _handles: null,
-        _contextObj: null,
-        _alertDiv: null,
-
-        // dojo.declare.constructor is called to construct the widget instance. Implement to initialize non-primitive properties.
-        constructor: function() {
-            // Uncomment the following line to enable debug messages
-            //logger.level(logger.DEBUG);
-            logger.debug(this.id + ".constructor");
-            this._handles = [];
-        },
 
         // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
         postCreate: function() {
@@ -87,7 +61,6 @@ define([
             dojoConstruct.place(domNode, this.domNode, "only");
             this._createSkycon();
         },
-
 
         _createSkycon: function() {
             logger.debug(this.id + "._createSkycon start")
@@ -117,28 +90,7 @@ define([
             if(this.animated == true){
                 skycons.play();
             }
-
-
-        },
-
-        // mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
-        update: function(obj, callback) {
-            logger.debug(this.id + ".update");
-
-            this._contextObj = obj;
-        //    this._resetSubscriptions();
-
-            callback();
-        },
-
-    // We want to stop events on a mobile device
-        _stopBubblingEventOnMobile: function(e) {
-            logger.debug(this.id + "._stopBubblingEventOnMobile");
-            if (typeof document.ontouchstart !== "undefined") {
-                dojoEvent.stop(e);
-            }
-        },
-
+        }
 
     });
 });
