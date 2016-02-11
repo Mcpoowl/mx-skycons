@@ -1,9 +1,15 @@
-(function(global) {
+(function (global, factory) {
+    typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() :
+    typeof define === "function" && define.amd ? define(factory) :
+    global.Skycons = factory()
+}(this, function () {
   "use strict";
 
   /* Set up a RequestAnimationFrame shim so we can animate efficiently FOR
    * GREAT JUSTICE. */
   var requestInterval, cancelInterval;
+
+  var global = window;
 
   (function() {
     var raf = global.requestAnimationFrame       ||
@@ -665,7 +671,7 @@
         el = document.getElementById(el);
 
       // Does nothing if canvas name doesn't exists
-      if(el === null)
+      if(el === null || typeof el === "undefined")
         return;
 
       draw = this._determineDrawingFunction(draw);
@@ -743,29 +749,5 @@
     }
   };
 
-  global.Skycons = Skycons;
-}(this));
-
-
-
-var icons = new Skycons({
-  "monochrome": false,
-  "colors": {
-    "cloud" : "#D3D3D3",
-    "sun"   : "#FFE246"
-  }
-}),
-          list  = [
-            "clear-day", "clear-night", "partly-cloudy-day",
-            "partly-cloudy-night", "cloudy", "rain", "sleet", "snow", "wind",
-            "fog"
-          ],
-          i;
-for(i = list.length; i--; ) {
-    var weatherType = list[i],
-        elements = document.getElementsByClassName( weatherType );
-    for ( e = elements.length; e--; ){
-        icons.set( elements[e], weatherType );
-    }
-}
-      icons.play();
+  return Skycons;
+}));
