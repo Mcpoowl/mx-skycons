@@ -50,7 +50,7 @@ define([
 
         // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
         postCreate: function() {
-          logger.level(logger.DEBUG);
+          //logger.level(logger.DEBUG);
           logger.debug(this.id + ".postCreate");
         },
 
