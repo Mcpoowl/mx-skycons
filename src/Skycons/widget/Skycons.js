@@ -28,11 +28,9 @@ define([
     "dojo/text",
     "dojo/html",
 
-    "Skycons/lib/jquery-1.11.2",
     "Skycons/lib/skycons"
-], function(declare, _WidgetBase, dom, dojoDom,   dojoClass, dojoStyle, dojoConstruct,  dojoText, dojoHtml ) {
+], function(declare, _WidgetBase, dom, dojoDom,   dojoClass, dojoStyle, dojoConstruct,  dojoText, dojoHtml, Skycons) {
     "use strict";
-
 
     // Declare widget's prototype.
     return declare("Skycons.widget.Skycons", [ _WidgetBase ], {
@@ -47,48 +45,67 @@ define([
         animated: "",
         color: "",
 
+        // Internal variables
+        _skyNode: null,
 
         // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
         postCreate: function() {
-            logger.debug(this.id + ".postCreate");
+          //logger.level(logger.DEBUG);
+          logger.debug(this.id + ".postCreate");
+        },
 
-            var domNode = dojoConstruct.create("canvas", {
+        update: function (obj, callback) {
+          logger.debug(this.id + ".update");
+          if (this._skyNode === null) {
+            // callback is called when the widget is ready (the domNode is created)
+            this._createSkycon(callback);
+          } else {
+            callback();
+          }
+        },
+
+        _createSkycon: function (callback) {
+            logger.debug(this.id + "._createSkycon create domNode");
+
+            this._skyNode = dojoConstruct.create("canvas", {
                 class: this.icon,
                 width: this.width,
                 height: this.height
-            })
+            }, this.domNode, "only");
 
-            dojoConstruct.place(domNode, this.domNode, "only");
-            this._createSkycon();
-        },
-
-        _createSkycon: function() {
-            logger.debug(this.id + "._createSkycon start")
+            logger.debug(this.id + "._createSkycon start");
             //Create a list with all the possible values
-        var    list  = [
-            "clear_day", "clear_night", "partly_cloudy_day",
-            "partly_cloudy_night", "cloudy", "rain", "sleet", "snow", "wind",
-            "fog"
-        ],
-        i;
-            if(this.coloring == "one"){
-                var colorString = this.color;
-                var skycons = new Skycons({"color": colorString});
+            var list = [
+              "clear_day", "clear_night", "partly_cloudy_day",
+              "partly_cloudy_night", "cloudy", "rain", "sleet", "snow", "wind",
+              "fog"],
+              //i,
+              skycons;
+
+            if (this.coloring === "one"){
+              var colorString = this.color;
+              skycons = new Skycons({"color": colorString});
             } else {
-            logger.debug(this.id + "._createSkycon colored")
-                // Colored instance of Skycon
-                var skycons = new Skycons({"monochrome": false});
+              logger.debug(this.id + "._createSkycon colored");
+              // Colored instance of Skycon
+              skycons = new Skycons({"monochrome": false});
             }
-            for(i = list.length; i--; ) {
+
+            for (var i = list.length; i>=0; i--) {
                 var weatherType = list[i],
-                    elements = document.getElementsByClassName( weatherType );
-                for (e = elements.length; e--;){
+                    elements = document.getElementsByClassName(weatherType);
+
+                for (var e = elements.length; e >= 0; e--){
                     skycons.set( elements[e], weatherType );
                 }
             }
 
-            if(this.animated == true){
+            if (this.animated === true){
                 skycons.play();
+            }
+
+            if (typeof callback === "function") {
+              callback();
             }
         }
 
