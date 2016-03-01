@@ -55,7 +55,6 @@ define([
             // callback is called when the widget is ready (the domNode is created)
             this._createSkycon(callback);
           } else {
-            domConstruct.destroy(this._skyNode);
             callback();
           }
         },
