@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<widget id="Skycons.widget.Skycons" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/">
+<widget id="Skycons.widget.Skycons" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
     <name>Skycons</name>
     <description>The description of this widget.</description>
     <icon>
@@ -52,6 +52,33 @@
             <caption>Animate</caption>
             <category>Appearance</category>
             <description>Animate the icon?</description>
+        </property>
+        <property key="useForecast" type="boolean" required="true" defaultValue="false">
+            <caption>Forecast</caption>
+            <category>Forecast</category>
+            <description>Use the Forecast.io API to get an accurate weather forecast for your location. Using this will overrule the icon set in the previous tab</description>
+        </property>
+        <property key="API" type="string" required="false">
+            <caption>API key</caption>
+            <category>Forecast</category>
+            <description>Register for an account at https://developer.forecast.io/ and look for your API key. The first 1000 calls per day are free!</description>
+        </property>
+        <property key="lat" type="microflow" required="false">
+            <caption>Latitude</caption>
+            <category>Forecast</category>
+            <description>Microflow which should return the latitude as a String</description>
+            <returnType type="String" />
+        </property>
+        <property key="long" type="microflow" required="false">
+            <caption>Longitude</caption>
+            <category>Forecast</category>
+            <description>Microflow which should return the longitude as a String</description>
+            <returnType type="String" />
+        </property>
+        <property key="extraDays" type="integer" required="true" defaultValue="0">
+            <caption>Extra days</caption>
+            <category>Forecast</category>
+            <description>Add extra days to the forecast date. 0 uses the current date</description>
         </property>
     </properties>
 </widget>
