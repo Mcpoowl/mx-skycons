@@ -29,9 +29,13 @@ define([
   "dojo/html",
   "dojo/_base/lang",
   "dojo/dom-class",
-  "Skycons/lib/skycons"
-], function (declare, _WidgetBase, dom, dojoDom, dojoQuery, dojoClass, dojoStyle, dojoConstruct, dojoText, dojoHtml,dojoLang, domClass, Skycons) {
+
+  "Skycons/lib/skycons",
+  "Skycons/lib/jquery-1.11.2"
+], function (declare, _WidgetBase, dom, dojoDom, dojoQuery, dojoClass, dojoStyle, dojoConstruct, dojoText, dojoHtml,dojoLang, domClass, Skycons, _jQuery) {
     "use strict";
+
+    var $ = _jQuery.noConflict(true);
 
     // Declare widget"s prototype.
     return declare("Skycons.widget.Skycons", [ _WidgetBase ], {
@@ -56,8 +60,8 @@ define([
         _skycons: null,
 
         update: function (obj, callback) {
-
-          logger.level(logger.DEBUG)
+          //Uncomment the line below to start debug logging.
+          //logger.level(logger.DEBUG)
           logger.debug(this.id + ".update");
           this._contextObj = obj;
           if (this._skyNode === null) {
@@ -215,19 +219,6 @@ define([
 
         },
 
-        // _processMF: function (latitude, returnedString) {
-        //     logger.debug(this.id + "._processMF");
-        //    // processedOutput = dojo.fromJson(dojo.isIE ? returnedString.xhr.responseText : returnedString.xhr.response).actionResult;
-        //     logger.debug(this.id + " return: " + returnedString);
-        //     if(latitude == true) {
-        //     this.latitude = returnedString;
-        //     logger.debug (this.id + "_latitude value after MF:" + this.latitude);
-        //   } else {
-        //     this.longitude = returnedString;
-        //     logger.debug (this.id + "longitude value after MF:" + this.longitude);
-
-        //   }
-        // },
 
         _callAPI: function (someArg, returnedString){
 
@@ -242,35 +233,26 @@ define([
           if (this._longitude != null && this._latitude != null)
           {
 
-          var APIKey = this.API
+          var APIKey = this.API;
           logger.debug(this.id + " latitude: " + this._latitude);
-          var extraDays = this.extraDays
-          var URL = "https://api.forecast.io/forecast/" + APIKey + "/" +this._latitude+","+this._longitude+","+this._getDate(extraDays)
+          var extraDays = this.extraDays;
+          var URL = "https://api.forecast.io/forecast/" + APIKey + "/" +this._latitude+","+this._longitude+","+this._getDate(extraDays);
+          var data;
+          //We need some helpers...
+          var node = this._skyNode;
+          var skyconHelp = this._skycons;
 
-          logger.debug("URL: " + URL);
-
-          this.icon = "rain";
-          domClass.replace(this._skyNode, this.icon);   
-          logger.debug("ICON AFTER FORECAST: " + this.icon);
-          this._skycons.set(this._skyNode, this.icon);
-
+           $.getJSON(URL + "?callback=?", function(data) {
+              logger.debug("URL Called:" + URL);
+              logger.debug(data);
+                //Math.round( number * 10 ) / 10
+                //Set icon from JSON response
+                logger.debug(data.currently.icon)
+                domClass.replace(node, data.currently.icon);
+                skyconHelp.set(node, data.currently.icon);
+              });
 
           }
-
-
-
-
-          // var xhr = new XMLHttpRequest();
-          // xhr.open("GET", URL, false);
-          // xhr.send();
-
-          // xhr.onreadystatechange = function() {
-          //   if (xhr.readyState == 4 && xhr.status == 200) {
-          //   var myArr = JSON.parse(xhr.responseText);
-          //   logger.debug(myArr)
-          //   }
-          // }
-
         }
 
     });

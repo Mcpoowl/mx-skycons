@@ -27,6 +27,14 @@ Place the widget at the desired location on your page. The widget properties are
 * Color - If at the 'Colors' property 'One Color' is selected, what color should the icon be?
 * Animate - Whether to animate the icon or not.
 
+_Forecast tab (New in version 2.0)_
+
+* Forecast - Should we get the icons from the forecast.io API?
+* API key - If you want to enable a forecast, register for an API key on [forecast.io](https://developer.forecast.io) the first 1000 calls PER DAY are free!
+* Lat - A microflow which should return your (or the users) latitude as a String
+* Long - A microflow which should return your (or the users) longitude as a String
+* Extra days - useful if you want to get a specific date. If set to zero it will use the current date, if set to 1 tomorrow (currentDate +1), etc.
+
 
 ## Known issues and bugs
 
