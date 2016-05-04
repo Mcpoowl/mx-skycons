@@ -34,6 +34,8 @@ _Forecast tab (New in version 2.0)_
 * Lat - A microflow which should return your (or the users) latitude as a String.
 * Long - A microflow which should return your (or the users) longitude as a String.
 * Extra days - useful if you want to get a specific date. If set to zero it will use the current date, if set to 1 tomorrow (currentDate +1), etc.
+* Show Temperature - Should we show the temperature below the icon? Note that this is purely for plain displaying it. Styling is not included :-).
+* Temperature scale - Show the temperature in Celcius or Fahrenheit (obviously only has impact if Show Temperature and forecasting is set to Yes).
 
 
 ## Known issues and bugs

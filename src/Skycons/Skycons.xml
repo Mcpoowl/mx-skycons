@@ -80,5 +80,19 @@
             <category>Forecast</category>
             <description>Add extra days to the forecast date. 0 uses the current date</description>
         </property>
+        <property key="showTemp" type="boolean" required="true" defaultValue="false">
+            <caption>Show temperature</caption>
+            <category>Forecast</category>
+            <description>Show temperature below the icon. Only works if forecast is set to Yes</description>
+        </property>
+        <property key="temperatureScale" type="enumeration" required="true" defaultValue="C">
+            <caption>Temperature scale</caption>
+            <category>Forecast</category>
+            <description>What scale to use?</description>
+             <enumerationValues>
+                <enumerationValue key="C">Celcius</enumerationValue>
+                <enumerationValue key="F">Fahrenheit</enumerationValue>
+            </enumerationValues>
+        </property>
     </properties>
 </widget>

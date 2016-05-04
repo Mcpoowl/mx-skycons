@@ -17,6 +17,7 @@
 
 // Required module list. Remove unnecessary modules, you can always get them back from the boilerplate.
 define([
+  "dijit/_TemplatedMixin",
   "dojo/_base/declare",
   "mxui/widget/_WidgetBase",
   "mxui/dom",
@@ -29,17 +30,19 @@ define([
   "dojo/html",
   "dojo/_base/lang",
   "dojo/dom-class",
+  "dojo/dom-attr",
 
   "Skycons/lib/skycons",
-  "Skycons/lib/jquery-1.11.2"
-], function (declare, _WidgetBase, dom, dojoDom, dojoQuery, dojoClass, dojoStyle, dojoConstruct, dojoText, dojoHtml,dojoLang, domClass, Skycons, _jQuery) {
+  "Skycons/lib/jquery-1.11.2",
+  "dojo/text!Skycons/widget/template/Skycons.html"
+], function (_TemplatedMixin, declare, _WidgetBase, dom, dojoDom, dojoQuery, dojoClass, dojoStyle, dojoConstruct, dojoText, dojoHtml, dojoLang, domClass, domAttr, Skycons, _jQuery, widgetTemplate) {
     "use strict";
 
     var $ = _jQuery.noConflict(true);
 
     // Declare widget"s prototype.
-    return declare("Skycons.widget.Skycons", [ _WidgetBase ], {
-
+    return declare("Skycons.widget.Skycons", [ _WidgetBase,  _TemplatedMixin], {
+        templateString: widgetTemplate,
         // Parameters configured in the Modeler.
         icon: "",
         width: "",
@@ -51,44 +54,45 @@ define([
         lat:"",
         long:"",
         extraDays:"",
+        showTemp:"",
+        temperatureScale:"",
+
+        //DOM elements
+        _skyNode: null,
+        infoNode: null,
 
         // Internal variables
-        _skyNode: null,
+
         _contextObj: null,
         _latitude: null,
         _longitude: null,
         _skycons: null,
 
+
+
         update: function (obj, callback) {
           //Uncomment the line below to start debug logging.
-          //logger.level(logger.DEBUG)
+          //logger.level(logger.DEBUG);
           logger.debug(this.id + ".update");
           this._contextObj = obj;
-          if (this._skyNode === null) {
+          //if (this._skyNode === null) {
             // callback is called when the widget is ready (the domNode is created)
             this._createSkycon(callback);
-          } else {
-            callback();
-          }
+         // } else {
+         //   callback();
+         // }
         },
-
 
         _createSkycon: function (callback) {
             logger.debug(this.id + "._createSkycon create domNode");
 
-
+              domAttr.set(this._skyNode, "class", this.icon)
+              domAttr.set(this._skyNode, "width", this.width)
+              domAttr.set(this._skyNode, "height", this.height)
 
             if (this.useForecast) {
               this._getLat(false);
               this._getLong(true);
-
-              logger.debug("ICON IN CREATE: " + this.icon);
-
-              this._skyNode = dojoConstruct.create("canvas", {
-                class: this.icon,
-                width: this.width,
-                height: this.height
-            }, this.domNode, "only");
 
             var skyconsOptions = {};
             if (this.coloring === "one"){
@@ -101,19 +105,7 @@ define([
               };
             }
 
-
-              //Change the class attribute of the skyNode
-             // domAttr.set(this._skyNode, "class", this.icon);   
-
-              //TODO: Call forecast API and set icon to new icon based on forecast
-              //this.icon =  this._getForecast(URL);
             } else {
-
-            this._skyNode = dojoConstruct.create("canvas", {
-                class: this.icon,
-                width: this.width,
-                height: this.height
-            }, this.domNode, "only");
 
             var skyconsOptions = {};
             if (this.coloring === "one"){
@@ -141,20 +133,6 @@ define([
 
 
         },
-
-        // _renderSkycon: function(options, icon) {
-        //     var skycons = new Skycons(options);
-        //     skycons.add(this._skyNode, icon);
-
-        //     if (this.animated === true) {
-        //         skycons.play();
-        //     }
-
-        //     if (typeof callback === "function") {
-        //       callback();
-        //     }
-        // },
-
         _getDate: function (extraDays) {
           var date = new Date();
           var dd = date.getDate()+ extraDays;
@@ -220,9 +198,9 @@ define([
         },
 
 
-        _callAPI: function (someArg, returnedString){
+        _callAPI: function (longBool, returnedString){
 
-          if(someArg == "true"){
+          if(longBool == "true"){
             this._longitude = returnedString;
             logger.debug(this.id + " longitude in API: " + this._longitude + " ReturnedString: " + returnedString);
           } else {
@@ -232,26 +210,48 @@ define([
 
           if (this._longitude != null && this._latitude != null)
           {
+            //Dirty check to see if the API key was not empty
+            if(this.API.length > 0) {
 
-          var APIKey = this.API;
-          logger.debug(this.id + " latitude: " + this._latitude);
-          var extraDays = this.extraDays;
-          var URL = "https://api.forecast.io/forecast/" + APIKey + "/" +this._latitude+","+this._longitude+","+this._getDate(extraDays);
-          var data;
-          //We need some helpers...
-          var node = this._skyNode;
-          var skyconHelp = this._skycons;
+              logger.debug(this.id + " latitude: " + this._latitude);
+              var extraDays = this.extraDays;
+              var forecastDate = this._getDate(extraDays)
+              var URL = "https://api.forecast.io/forecast/" + this.API + "/" +this._latitude+","+this._longitude+","+forecastDate;
+              var data;
+              //We need some helpers... for quick access..
+              var node = this._skyNode;
+              var skyconHelp = this._skycons;
+              var tempBoolean = this.showTemp;
+              var tempScale = this.temperatureScale;
+              var info = this.infoNode;
 
-           $.getJSON(URL + "?callback=?", function(data) {
-              logger.debug("URL Called:" + URL);
-              logger.debug(data);
-                //Math.round( number * 10 ) / 10
-                //Set icon from JSON response
-                logger.debug(data.currently.icon)
-                domClass.replace(node, data.currently.icon);
-                skyconHelp.set(node, data.currently.icon);
-              });
+               $.getJSON(URL + "?callback=?", function(data, status, xhr) {
+                  logger.debug("URL Called:" + URL);
+                  logger.debug(data);
+                  //Try to set icon based on API call.. If succesfull
+                    domClass.replace(node, data.currently.icon);
+                    skyconHelp.set(node, data.currently.icon);
 
+                    if(tempBoolean) {
+                      if(tempScale === 'C') {
+                        //Celcius   
+                        var temp = data.currently.temperature;
+                        var Celc =  (temp - 32) * (5 / 9);
+                        domAttr.set(info, { innerHTML: Math.round(Celc) + "&deg; C"});
+                      }
+                      else if (tempScale === 'F') {
+                        //Fahrenheit
+                        domAttr.set(info, {innerHTML: Math.round(data.currently.temperature) + "&deg; F"});
+                      } 
+                    } else {
+                        dojoConstruct.destroy(info);
+                    }
+                  });
+            } else {
+              logger.error("Invalid API key supplied!: " + this.API)
+            }
+
+          
           }
         }
 
