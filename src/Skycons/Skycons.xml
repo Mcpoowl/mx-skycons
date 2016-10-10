@@ -56,12 +56,12 @@
         <property key="useForecast" type="boolean" required="true" defaultValue="false">
             <caption>Forecast</caption>
             <category>Forecast</category>
-            <description>Use the Forecast.io API to get an accurate weather forecast for your location. Using this will overrule the icon set in the previous tab</description>
+            <description>Use the to Darksky API get an accurate weather forecast for your location. Using this will overrule the icon set in the previous tab</description>
         </property>
         <property key="API" type="string" required="false">
             <caption>API key</caption>
             <category>Forecast</category>
-            <description>Register for an account at https://developer.forecast.io/ and look for your API key. The first 1000 calls per day are free!</description>
+            <description>Register for an account at https://darksky.net/dev/ and look for your API key. The first 1000 calls per day are free!</description>
         </property>
         <property key="lat" type="microflow" required="false">
             <caption>Latitude</caption>
