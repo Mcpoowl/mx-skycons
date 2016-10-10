@@ -29,8 +29,8 @@ Place the widget at the desired location on your page. The widget properties are
 
 _Forecast tab (New in version 2.0)_
 
-* Forecast - Should we get the icons from the forecast.io API?
-* API key - If you want to enable a forecast, register for an API key on [developer.forecast.io](https://developer.forecast.io) .The first 1000 calls PER DAY are free!
+* Forecast - Should we get the icons from the forecast API?
+* API key - If you want to enable a forecast, register for an API key on [darksky.net/dev/](https://darksky.net/dev/) .The first 1000 calls PER DAY are free!
 * Lat - A microflow which should return your (or the users) latitude as a String.
 * Long - A microflow which should return your (or the users) longitude as a String.
 * Extra days - useful if you want to get a specific date. If set to zero it will use the current date, if set to 1 tomorrow (currentDate +1), etc.

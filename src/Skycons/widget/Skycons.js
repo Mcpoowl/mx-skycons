@@ -216,7 +216,7 @@ define([
               logger.debug(this.id + " latitude: " + this._latitude);
               var extraDays = this.extraDays;
               var forecastDate = this._getDate(extraDays)
-              var URL = "https://api.forecast.io/forecast/" + this.API + "/" +this._latitude+","+this._longitude+","+forecastDate;
+              var URL = "https://api.darksky.net/forecast/" + this.API + "/" +this._latitude+","+this._longitude+","+forecastDate;
               var data;
               //We need some helpers... for quick access..
               var node = this._skyNode;
